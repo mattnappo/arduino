@@ -10,7 +10,7 @@
 // getLen - Get the amount of elements in an integer array
 int getLen(int *arr[]) {
     int n = sizeof(*arr);
-    return n / sizeof(int));
+    return n / sizeof(int);
 }
 
 // Initialize the RFID scanner
