@@ -2,6 +2,8 @@
 #include <Adafruit_GFX.h>
 #include <SPI.h>
 
+#include "key.h"
+
 #define SS_PIN 10
 #define RST_PIN 9
 
@@ -10,12 +12,6 @@ MFRC522 rfid(
     SS_PIN,
     RST_PIN
 );
-
-// Initialize the RFID key
-MFRC522::MIFARE_Key key;
-
-int codeRead = 0;
-String uidString;
 
 void setup() {
     Serial.begin(9600); // Init the serial bus
@@ -33,9 +29,10 @@ void loop() {
 
 void readRFID() {
     rfid.PICC_ReadCardSerial(); // Read the card
-    Serial.print(F("\nPICC type: ")); // Print the PICC type (prefix)
 
     MFRC522::PICC_Type piccType = rfid.PICC_GetType(rfid.uid.sak); // Get the picc type
+
+    Serial.print(F("\nPICC type: ")); // Print the PICC type (prefix)
     Serial.println(rfid.PICC_GetTypeName(piccType)); // Print the actual PICC type (human-readable text)
 
     // Check if the PICC is a Classic MIFARE
@@ -48,44 +45,25 @@ void readRFID() {
         return;
     }
 
-    // Start reading the uid
-    Serial.println("Scanned PICC UID: "); // Print the uid (prefix)
-    //    Serial.println(rfid.uid.uidByte); // Print the uid
-    
-    // printDec(rfid.uid.uidByte, rfid.uid.size);
-
-    // Set the uid string
-    // uidString = String(
-    //     rfid.uid.uidByte[0] + " " +
-    //     rfid.uid.uidByte[1] + " " +
-    //     rfid.uid.uidByte[2] + " " +
-    //     rfid.uid.uidByte[3] + " "
-    // );
-
-    uidString = String(
-        rfid.uid.uidByte[0] +
-        rfid.uid.uidByte[1] +
-        rfid.uid.uidByte[2] +
-        rfid.uid.uidByte[3]
-    );
-
-    // printUID(); // Print the uid
-    
-    Serial.println("uid str: " + uidString); // Print the uid
-
-    // Loop through all of the bytes of the uid (the RFID scan)
-    int i = 0;
     boolean match = true;
+    for (int j = 0; j < validKeys.size; j++) {
+        // Loop through all of the bytes of the uid (the RFID scan)
+        int i = 0;
+        while (i < rfid.uid.size) {
+            Serial.println(rfid.uid.uidByte[j][i]);
+            
+            // If one of any of the uid bytes don't match the valid uid
+            if (!(rfid.uid.uidByte[i] == validKey[j][i])) {
+                Serial.println(rfid.uid.uidByte[j][i]);
+                match = false;
+            }
 
-    while (i < rfid.uid.size) {
-        Serial.println(rfid.uid.uidByte[i]);
-        // If one of any of the uid bytes don't match the valid uid
-        if (!(rfid.uid.uidByte[i] == validKey[i])) {
-            Serial.println(rfid.uid.uidByte[i]);
-            match = false;
+            i++;
         }
-        i++;
+        Serial.println("");
     }
+    
+    
 
     if (match) {
         Serial.println("Valid card detected!");
