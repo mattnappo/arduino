@@ -10,7 +10,7 @@
 // getLen - Get the amount of elements in an integer array
 int getLen(int *arr[]) {
     int n = sizeof(*arr);
-    return n / sizeof(int);
+    return n / sizeof(int));
 }
 
 // Initialize the RFID scanner
@@ -51,27 +51,27 @@ void readRFID() {
         Serial.println(F("Non-MIFARE Classic tag detected")); // Tell the user that their tag is invalid (for this program)
         return;
     }
-
+    
     // Loop through all of the keys
-    boolean match = true;
-    for (int j = 0; j < getLen(validKeys); j++) {
+    int match = 0;
+    for (int j = 0; j < getLen(validKeys) + 1; j++) {
+        int tempUID[rfid.uid.size];
         // Loop through all of the bytes of the uid (the RFID scan)
-        int i = 0;
-        while (i < rfid.uid.size) {
+        for (int i = 0; i < rfid.uid.size; i++) {
             Serial.println(rfid.uid.uidByte[i]);
-            
-            // If one of any of the uid bytes don't match the valid uid
-            if (!(rfid.uid.uidByte[i] == validKeys[j][i])) {
-                Serial.println(rfid.uid.uidByte[i]);
-                match = false;
-            }
+            tempUID[i] = rfid.uid.uidByte[i]; // Set the value to a temporary int array for comparison later
+        }
 
-            i++;
+        // Compare the two integer (uid) arrays
+        for (int k = 0; k < getLen(&validKeys[j]); k++) {
+            if (validKeys[j][k] == tempUID[k]) {
+                match++;
+            }
         }
     }
 
     // See if there is a match
-    if (match) {
+    if (match > 0) {
         Serial.println("Valid card detected!");
     }
     
@@ -80,7 +80,6 @@ void readRFID() {
     }
 
     rfid.PICC_HaltA(); // Halt the RFID PICC
-
     rfid.PCD_StopCrypto1(); // Stop the PCD encryption
 
 }
