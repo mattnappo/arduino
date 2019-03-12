@@ -23,7 +23,7 @@ extern "C" {
     // An array of valid keys
     int *validKeys[] = {
         whiteKeycard,
-        blueKeychain
+        blueKeychain,
     };
 }
 

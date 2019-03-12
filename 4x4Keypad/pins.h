@@ -21,10 +21,10 @@ extern "C" {
 
     // Another random pin
     const char pin2[] = {
+        '1',
         '9',
-        'A',
-        'B',
-        '7',
+        '4',
+        '2',
     };
 
     // Another random pin
@@ -44,7 +44,7 @@ extern "C" {
     };
 
     const int VALID_PIN_COUNT = 5;
-    
+
     // An array of the valid pins
     const char *validPins[] = {
         pin0,
