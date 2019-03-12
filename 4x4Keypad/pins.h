@@ -19,10 +19,37 @@ extern "C" {
         '#',
     };
 
+    // Another random pin
+    const char pin2[] = {
+        '9',
+        'A',
+        'B',
+        '7',
+    };
+
+    // Another random pin
+    const char pin3[] = {
+        '5',
+        '4',
+        '5',
+        '1',
+    };
+
+    // Another random pin
+    const char pin4[] = {
+        '1',
+        '2',
+        '3',
+        '4',
+    };
+
     // An array of the valid pins
     const char *validPins[] = {
         pin0,
         pin1,
+        pin2,
+        pin3,
+        pin4,
     };
 }
 

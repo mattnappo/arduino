@@ -36,8 +36,7 @@ Keypad keypad = Keypad(
 
 // getLen - Get the amount of elements in a char array
 int getLen(char *arr) {
-    int n = sizeof(*arr);
-    return n / sizeof(char);
+    return sizeof(arr) / sizeof(arr[0]);
 }
 
 void setup() {
@@ -71,9 +70,13 @@ void loop() {
 // checkPin - Check if a pin is valid
 void checkPin(char *pin) {
     int match = 0;
+    boolean secure = false; // Whether a valid pin was entered or not
     
+    Serial.print  ("len: ");
+    Serial.println(getLen(*validPins));
+
     // Loop through all of the valid pins
-    for (int j = 0; j < getLen(*validPins) + 1; j++) {
+    for (int j = 0; j < 5 + 1; j++) {
         Serial.print("j: ");
         Serial.println(j);
 
@@ -93,15 +96,22 @@ void checkPin(char *pin) {
             if (validPins[j][k] == pin[k]) {
                 match++;
             }
+
         }
+        // See if there is a match
+        if (match == PIN_SIZE) {
+            secure = true;
+            break;
+        }
+        match = 0;
     }
 
-    // See if there is a match
-    if (match == PIN_SIZE) {
-        Serial.println("Valid card detected!");
+    if (secure) {
+        Serial.println("Valid pin entered!");
     }
-    
+
     else {
-        Serial.println("Invalid card detected!");
+        Serial.println("Invalid pin entered!");
     }
+
 }
