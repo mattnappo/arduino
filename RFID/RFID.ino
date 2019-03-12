@@ -7,6 +7,12 @@
 #define SS_PIN 10
 #define RST_PIN 9
 
+// getLen - Get the amount of elements in an integer array
+int getLen(int *arr[]) {
+    int n = sizeof(*arr);
+    return n / sizeof(int);
+}
+
 // Initialize the RFID scanner
 MFRC522 rfid(
     SS_PIN,
@@ -22,11 +28,12 @@ void setup() {
 void loop() {
     // Call the readRFID() func if a RFID card within range of the sensor (20 mm)
     if (rfid.PICC_IsNewCardPresent()) {
-        readRFID();
+        readRFID(); // Read the card
     }
     delay(100); // Read every 100ms
 }
 
+// readRFID - Read an RFID card
 void readRFID() {
     rfid.PICC_ReadCardSerial(); // Read the card
 
@@ -45,26 +52,25 @@ void readRFID() {
         return;
     }
 
+    // Loop through all of the keys
     boolean match = true;
-    for (int j = 0; j < validKeys.size; j++) {
+    for (int j = 0; j < getLen(validKeys); j++) {
         // Loop through all of the bytes of the uid (the RFID scan)
         int i = 0;
         while (i < rfid.uid.size) {
-            Serial.println(rfid.uid.uidByte[j][i]);
+            Serial.println(rfid.uid.uidByte[i]);
             
             // If one of any of the uid bytes don't match the valid uid
-            if (!(rfid.uid.uidByte[i] == validKey[j][i])) {
-                Serial.println(rfid.uid.uidByte[j][i]);
+            if (!(rfid.uid.uidByte[i] == validKeys[j][i])) {
+                Serial.println(rfid.uid.uidByte[i]);
                 match = false;
             }
 
             i++;
         }
-        Serial.println("");
     }
-    
-    
 
+    // See if there is a match
     if (match) {
         Serial.println("Valid card detected!");
     }
@@ -73,10 +79,8 @@ void readRFID() {
         Serial.println("Invalid card detected!");
     }
 
-    // Halt the RFID PICC
-    rfid.PICC_HaltA();
+    rfid.PICC_HaltA(); // Halt the RFID PICC
 
-    // Stop the PCD encryption
-    rfid.PCD_StopCrypto1();
+    rfid.PCD_StopCrypto1(); // Stop the PCD encryption
 
 }
