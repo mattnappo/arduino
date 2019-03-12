@@ -3,8 +3,8 @@
 
 #include "pins.h"
 
-const byte ROWS     = 4; // Amount of rows on the keypad
-const byte COLS     = 4; // Amount of columns on the keypad
+const byte ROWS     = 0x4; // Amount of rows on the keypad
+const byte COLS     = 0x4; // Amount of columns on the keypad
 const int  PIN_SIZE = 4;
 
 // The actual keys on the keypad
@@ -34,11 +34,6 @@ Keypad keypad = Keypad(
     COLS
 );
 
-// getLen - Get the amount of elements in a char array
-int getLen(char *arr) {
-    return sizeof(arr) / sizeof(arr[0]);
-}
-
 void setup() {
     Serial.begin(9600); // Initialize the serial connection
 }
@@ -60,7 +55,6 @@ void loop() {
             checkPin(pin); // Check if the pin is valid
             
             // Reset the pin and counter
-            free(pin);
             counter = 0;
         }
         
@@ -69,41 +63,28 @@ void loop() {
 
 // checkPin - Check if a pin is valid
 void checkPin(char *pin) {
-    int match = 0;
     boolean secure = false; // Whether a valid pin was entered or not
-    
-    Serial.print  ("len: ");
-    Serial.println(getLen(*validPins));
 
     // Loop through all of the valid pins
-    for (int j = 0; j < 5 + 1; j++) {
-        Serial.print("j: ");
-        Serial.println(j);
-
+    for (int j = 0; j < VALID_PIN_COUNT; j++) {
+        int match = 0;
         // Compare the two char arrays
         for (int k = 0; k < PIN_SIZE; k++) {
-            Serial.print("k: ");
-            Serial.println(k);
+            // Serial.print("match: ");
+            // Serial.println(match);
 
-            Serial.print("         pin k: ");
-            Serial.println(pin[k]);
-
-            Serial.print("valid pins j k: ");
-            Serial.println(validPins[j][k]);
-
-            Serial.println("");
-
+            // Compare the chars
             if (validPins[j][k] == pin[k]) {
                 match++;
             }
-
         }
+
         // See if there is a match
         if (match == PIN_SIZE) {
             secure = true;
             break;
         }
-        match = 0;
+        
     }
 
     if (secure) {

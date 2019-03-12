@@ -43,6 +43,8 @@ extern "C" {
         '4',
     };
 
+    const int VALID_PIN_COUNT = 5;
+    
     // An array of the valid pins
     const char *validPins[] = {
         pin0,
