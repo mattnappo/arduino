@@ -51,32 +51,37 @@ void loop() {
     char readKey = keypad.getKey(); // Read a key
 
     if (readKey) { // If the key is not null
-        if (counter == (PIN_SIZE - 1)) {
+        // Increment the counter and set the temp pin accordingly
+        pin[counter] = readKey;
+        counter++;
+
+        Serial.println(readKey);
+        
+        if (counter == (PIN_SIZE)) {
             checkPin(pin); // Check if the pin is valid
             
             // Reset the pin and counter
             free(pin);
             counter = 0;
         }
-        else {
-            // Increment the counter and set the temp pin accordingly
-            pin[counter] = readKey;
-            counter++;
-
-            Serial.println(readKey);
-        }
+        
     }
 }
 
 // checkPin - Check if a pin is valid
 void checkPin(char *pin) {
     int match = 0;
-
+    
     // Loop through all of the valid pins
     for (int j = 0; j < getLen(*validPins) + 1; j++) {
-        
+        Serial.print("j: ");
+        Serial.println(j);
+
         // Compare the two char arrays
         for (int k = 0; k < PIN_SIZE; k++) {
+            Serial.print("k: ");
+            Serial.println(k);
+
             Serial.print("         pin k: ");
             Serial.println(pin[k]);
 
