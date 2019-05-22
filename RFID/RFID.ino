@@ -77,7 +77,7 @@ void readRFID() {
   if (match > 0) {
     Serial.println("Valid card detected!");
     digitalWrite(BUZZER_PIN, HIGH);
-    delay(680);
+    delay(500);
     digitalWrite(BUZZER_PIN, 0);
   }
 
