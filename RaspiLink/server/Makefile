@@ -1,4 +1,3 @@
 GCC = g++
-main: serial.cpp test.cpp serial.h
-	mkdir -p bin/
-	$(GCC) $^
+main.out: serial.cpp test.cpp
+	$(GCC) -o $@ $^

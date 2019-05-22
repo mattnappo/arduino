@@ -3,7 +3,7 @@
 int main()
 {
     unsigned char WRITE_BYTES[] = "T";
-    char PORT[] = "/dev/ttyAMC0";
+    char PORT[] = "/dev/ttyACM0";
 
     int fd = serial_com::open_port(PORT);
     serial_com::configure_port(fd);
